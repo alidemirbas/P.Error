@@ -4,24 +4,35 @@ using System.Linq;
 
 namespace P.ErrorManagement
 {
+    //todo burdaki kodlarda bi cirkinlik var
     public class ProtocolStatus : IEquatable<ProtocolStatus>
     {
         ProtocolStatus()
         {
             _hashSet = new HashSet<ProtocolStatus>();
-
-            Add(new ProtocolStatus { Name = "Success", Code = 200, Description = "OK" });
-            Add(new ProtocolStatus { Name = "InternalError", Code = 500, Description = "Internal Server Error" });
-            Add(new ProtocolStatus { Name = "BadRequest", Code = 400, Description = "Bad Request Error" });
-            Add(new ProtocolStatus { Name = "Unauthorized", Code = 401, Description = "Unauthorized Error" });
-            Add(new ProtocolStatus { Name = "Forbidden", Code = 403, Description = "Forbidden Error" });
-            Add(new ProtocolStatus { Name = "NotFound", Code = 404, Description = "Not Found Error" });
-            Add(new ProtocolStatus { Name = "SwitchingProtocols", Code = 101, Description = "Switching Protocols" });
-            Add(new ProtocolStatus { Name = "HalfOpen", Code = 600, Description = "Dropped Connection" });
         }
 
         private static ProtocolStatus _instance;
-        public static ProtocolStatus Instance{ get { return _instance ?? (_instance = new ProtocolStatus()); } }
+        public static ProtocolStatus Instance
+        {
+            get
+            {
+                if (_instance != null)
+                    return _instance;
+                _instance = new ProtocolStatus();
+
+                _instance.Add(new ProtocolStatus { Name = "SwitchingProtocols", Code = 101, Description = "Switching Protocols" });
+                _instance.Add(new ProtocolStatus { Name = "Success", Code = 200, Description = "OK" });
+                _instance.Add(new ProtocolStatus { Name = "InternalError", Code = 500, Description = "Internal Server Error" });
+                _instance.Add(new ProtocolStatus { Name = "BadRequest", Code = 400, Description = "Bad Request Error" });
+                _instance.Add(new ProtocolStatus { Name = "Unauthorized", Code = 401, Description = "Unauthorized Error" });
+                _instance.Add(new ProtocolStatus { Name = "Forbidden", Code = 403, Description = "Forbidden Error" });
+                _instance.Add(new ProtocolStatus { Name = "NotFound", Code = 404, Description = "Not Found Error" });
+                _instance.Add(new ProtocolStatus { Name = "HalfOpen", Code = 600, Description = "Dropped Connection" });
+
+                return _instance;
+            }
+        }
 
         public ProtocolStatus this[int code]
         {
@@ -62,8 +73,11 @@ namespace P.ErrorManagement
             return Equals(obj as ProtocolStatus);
         }
 
-        public static bool operator ==(ProtocolStatus p1, ProtocolStatus p2)
+        public static bool operator ==(ProtocolStatus p1, ProtocolStatus p2)//todo burda bir gereksizlik var gibi
         {
+            if (object.ReferenceEquals(p1, null) && object.ReferenceEquals(p2, null))
+                return true;
+
             if (object.ReferenceEquals(p1, null) || object.ReferenceEquals(p2, null))
                 return false;
 
